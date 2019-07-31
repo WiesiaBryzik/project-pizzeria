@@ -95,21 +95,20 @@
         event.preventDefault();
 
         /* toggle active class on element of thisProduct */
-        // ?????
-        // activeProduct.classList.toggle(clickable);
+        thisProduct.element.classList.toggle('active');
 
         /* find all active products */
-        const products = document.querySelectorAll(select.menuProduct.clickable);
+        const products = document.querySelectorAll(select.all.menuProducts);
         console.log(products);
 
         /* START LOOP: for each active product */
         for (let product of products) {
 
           /* START: if the active product isn't the element of thisProduct */
-          if(products[product] != activeProduct ){
+          if(product != thisProduct.element ){
 
             /* remove class active for the active product */
-            activeProduct.classList.remove('active');
+            product.classList.remove('active');
 
             /* END: if the active product isn't the element of thisProduct */
           }
