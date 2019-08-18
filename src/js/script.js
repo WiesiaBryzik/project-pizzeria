@@ -60,9 +60,16 @@
       thisProduct.data = data;
 
       thisProduct.renderInMenu();
+      thisProduct.getElements();
       thisProduct.initAccordion();
+      thisProduct.initOrderForm();
+      thisProduct.initAmountWidget();
+      thisProduct.processOrder();
 
       console.log('new Product:', thisProduct);
+      // console.log(thisProduct.accordionTrigger);
+      // console.log(thisProduct.form);
+      // console.log(thisProduct.formInputs);
     }
 
     renderInMenu(){
@@ -81,15 +88,26 @@
       menuContainer.appendChild(thisProduct.element);
     }
 
+    getElements(){
+      const thisProduct = this;
+
+      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
+      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
+      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+      thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
+    }
+
     initAccordion(){
       const thisProduct = this;
 
       /* find the clickable trigger (the element that should react to clicking) */
-      const clickable = thisProduct.element.querySelector(select.menuProduct.clickable);
+      //const clickable = thisProduct.element.querySelector(select.menuProduct.clickable);
 
       /* START: click event listener to trigger */
-      clickable.addEventListener('click', function(){
-        console.log('Link was clicked!');
+      thisProduct.accordionTrigger.addEventListener('click', function(){
 
         /* prevent default action for event */
         event.preventDefault();
@@ -99,7 +117,7 @@
 
         /* find all active products */
         const products = document.querySelectorAll(select.all.menuProducts);
-        console.log(products);
+        //console.log(products);
 
         /* START LOOP: for each active product */
         for (let product of products) {
@@ -116,6 +134,110 @@
         }
       /* END: click event listener to trigger */
       });
+    }
+
+    initOrderForm(){
+      const thisProduct = this;
+      //console.log('OrderForm:');
+
+      thisProduct.form.addEventListener('submit', function(event){
+        event.preventDefault();
+        thisProduct.processOrder();
+      });
+
+      for(let input of thisProduct.formInputs){
+        input.addEventListener('change', function(){
+          thisProduct.processOrder();
+        });
+      }
+
+      thisProduct.cartButton.addEventListener('click', function(event){
+        event.preventDefault();
+        thisProduct.processOrder();
+      });
+    }
+
+    processOrder(){
+      const thisProduct = this;
+      console.log('processOrder');
+
+      /* read all data from the form (using utils.serializeFormToObject) and save it to const formData */
+      const formData = utils.serializeFormToObject(thisProduct.form);
+
+      /* set variable price to equal thisProduct.data.price */
+      let price = thisProduct.data.price;
+
+      /* START LOOP: for each paramId in thisProduct.data.params */
+      for(let paramId in thisProduct.data.params){
+
+        /* jak to zapisac?? save the element in thisProduct.data.params with key paramId as const param */
+        const param = thisProduct.data.params;
+
+        /* START LOOP: for each optionId in param.options */
+        for(let optionId in param.options){
+
+          /*?? jak to zapisac? save the element in param.options with key optionId as const option */
+          //const option = param.options, optionId
+
+          const optionSelected = formData.hasOwnProperty(paramId) && formData[paramId].indexOf(optionId) > -1;
+          /* START IF: if option is selected and option is not default */
+          if(optionSelected && !option.default){
+
+            /* ?? co mam dodac/ odjąć? gdzie jest zapisana cena dodatku? add price of option to variable price */
+            price = price + option;
+
+          /* END IF: if option is selected and option is not default */
+          /* START ELSE IF: if option is not selected and option is default */
+          } else if(!optionSelected && option.default){
+
+            /* deduct price of option from price */
+            price = price - option;
+
+          /* END ELSE IF: if option is not selected and option is default */
+          }
+        /* END LOOP: for each optionId in param.options */
+        }
+      /* END LOOP: for each paramId in thisProduct.data.params */
+      }
+      /* set the contents of thisProduct.priceElem to be the value of variable price */
+      thisProduct.priceElem = price;
+    };
+
+    initAmountWidget(){
+      const thisProduct = this;
+
+      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+    }
+  }
+
+  class AmountWidget{
+    constructor(element){
+      const thisWidget = this;
+
+      thisWidget.getElements(element);
+      thisWidget.setValue(thisWidget.input.value);
+
+      console.log('AmountWidget:', thisWidget);
+      console.log('constructor arguments:', element);
+    }
+
+    getElements(element){
+      const thisWidget = this;
+
+      thisWidget.element = element;
+      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
+      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
+      thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+    }
+
+    setValue(value){
+      const thisWidget = this;
+
+      const newValue = parseInt(value);
+
+      /* TODO: Add validation */
+      thisWidget.value = newValue;
+      thisWidget.input.value = thisWidget.value;
     }
   }
 
