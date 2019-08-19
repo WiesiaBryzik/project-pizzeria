@@ -177,31 +177,45 @@
         for(let optionId in param.options){
 
           /*?? jak to zapisac? save the element in param.options with key optionId as const option */
-          //const option = param.options, optionId
+          const option = param.options;
 
           const optionSelected = formData.hasOwnProperty(paramId) && formData[paramId].indexOf(optionId) > -1;
           /* START IF: if option is selected and option is not default */
           if(optionSelected && !option.default){
 
             /* ?? co mam dodac/ odjąć? gdzie jest zapisana cena dodatku? add price of option to variable price */
-            price = price + option;
+            price = price + option.price;
 
           /* END IF: if option is selected and option is not default */
           /* START ELSE IF: if option is not selected and option is default */
           } else if(!optionSelected && option.default){
 
             /* deduct price of option from price */
-            price = price - option;
+            price = price - option.price;
 
           /* END ELSE IF: if option is not selected and option is default */
+          }
+          /* add const dla wyszukanych elementów */
+          const images = thisProduct.imageWrapper.querySelectorAll(thisProduct.data.params-param.options);
+
+          /* jesli opcja jest zaznaczona to all img dla tej opcji powinny otrzymac klase zapisaną w classNames.menuProduct.imageVisible */
+          if(optionSelected){
+            for(let image in images){
+              image.classList.add(classNames.menuProduct.imageVisible);
+            }
+          /* all img dla tej opcji powinny stracic klase zapisaną w classNames.menuProduct.imageVisible */
+          } else {
+            for(let image in images){
+              image.classList.remove(classNames.menuProduct.imageVisible);
+            }
           }
         /* END LOOP: for each optionId in param.options */
         }
       /* END LOOP: for each paramId in thisProduct.data.params */
       }
-      /* set the contents of thisProduct.priceElem to be the value of variable price */
+      /* jak to zapisac? wyrzuca bląd ? set the contents of thisProduct.priceElem to be the value of variable price */
       thisProduct.priceElem = price;
-    };
+    }
 
     initAmountWidget(){
       const thisProduct = this;
