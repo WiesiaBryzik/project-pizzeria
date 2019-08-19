@@ -69,7 +69,7 @@
       console.log('new Product:', thisProduct);
       // console.log(thisProduct.accordionTrigger);
       // console.log(thisProduct.form);
-      // console.log(thisProduct.formInputs);
+      console.log(thisProduct.formInputs);
     }
 
     renderInMenu(){
@@ -159,7 +159,7 @@
 
     processOrder(){
       const thisProduct = this;
-      console.log('processOrder');
+      // console.log('processOrder');
 
       /* read all data from the form (using utils.serializeFormToObject) and save it to const formData */
       const formData = utils.serializeFormToObject(thisProduct.form);
@@ -213,6 +213,10 @@
         }
       /* END LOOP: for each paramId in thisProduct.data.params */
       }
+
+      /*NEW multiply price by amount */
+      price *= thisProduct.amountWidget.value;
+
       /* jak to zapisac? wyrzuca bląd ? set the contents of thisProduct.priceElem to be the value of variable price */
       thisProduct.priceElem = price;
     }
@@ -221,6 +225,10 @@
       const thisProduct = this;
 
       thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+
+      thisProduct.amountWidgetElem.addEventListener("updated", function(){
+        thisProduct.processOrder();
+      })
     }
   }
 
@@ -229,6 +237,7 @@
       const thisWidget = this;
 
       thisWidget.getElements(element);
+      thisWidget.value = settings.amountWidget.defaultValue;
       thisWidget.setValue(thisWidget.input.value);
 
       console.log('AmountWidget:', thisWidget);
@@ -250,15 +259,40 @@
       const newValue = parseInt(value);
 
       /* TODO: Add validation */
+
       thisWidget.value = newValue;
+      thisWidget.announce();
       thisWidget.input.value = thisWidget.value;
+    }
+
+    initActions() {
+      thisWidget.input.addEventListener('change', function(){
+        setValue(thisWidget.input.value);
+      });
+
+      thisWidget.linkDecrease.addEventListener('click', function(){
+        event.preventDefault();
+        setValue(thisWidget.value-1);
+      });
+
+      thisWidget.linkIncrease.addEventListener('click', function(){
+        event.preventDefault();
+        setValue(thisWidget.value+1)
+      });
+    }
+
+    announce(){
+      const thisWidget = this;
+
+      const event = new Event('updated');
+      thisWidget.element.dispatchEvent(event);
     }
   }
 
   const app = {
     initMenu: function(){
       const thisApp = this;
-      console.log('thisApp.data:', thisApp.data);
+      // console.log('thisApp.data:', thisApp.data);
 
       for(let productData in thisApp.data.products){
         new Product(productData, thisApp.data.products[productData]);
