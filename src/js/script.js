@@ -226,9 +226,9 @@
 
       thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
 
-      thisProduct.amountWidgetElem.addEventListener("updated", function(){
+      thisProduct.amountWidgetElem.addEventListener('updated', function(){
         thisProduct.processOrder();
-      })
+      });
     }
   }
 
@@ -277,7 +277,7 @@
 
       thisWidget.linkIncrease.addEventListener('click', function(){
         event.preventDefault();
-        setValue(thisWidget.value+1)
+        setValue(thisWidget.value+1);
       });
     }
 
