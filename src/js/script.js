@@ -159,31 +159,36 @@
 
     processOrder(){
       const thisProduct = this;
-      // console.log('processOrder');
+      console.log('processOrder');
 
       /* read all data from the form (using utils.serializeFormToObject) and save it to const formData */
       const formData = utils.serializeFormToObject(thisProduct.form);
+      //console.log('formData', formData);
+
+      thisProduct.params = {};
 
       /* set variable price to equal thisProduct.data.price */
       let price = thisProduct.data.price;
+      let paramsData = thisProduct.data.params;
 
       /* START LOOP: for each paramId in thisProduct.data.params */
-      for(let paramId in thisProduct.data.params){
+      for(let paramId in paramsData){
 
-        /* jak to zapisac?? save the element in thisProduct.data.params with key paramId as const param */
-        const param = thisProduct.data.params;
+        /* save the element in thisProduct.data.params with key paramId as const param */
+        const param = paramsData[paramId];
 
         /* START LOOP: for each optionId in param.options */
         for(let optionId in param.options){
+          console.log(optionId);
 
-          /*?? jak to zapisac? save the element in param.options with key optionId as const option */
-          const option = param.options;
+          /* save the element in param.options with key optionId as const option */
+          const option = param.options[optionId];
 
           const optionSelected = formData.hasOwnProperty(paramId) && formData[paramId].indexOf(optionId) > -1;
           /* START IF: if option is selected and option is not default */
           if(optionSelected && !option.default){
 
-            /* ?? co mam dodac/ odjąć? gdzie jest zapisana cena dodatku? add price of option to variable price */
+            /* add price of option to variable price */
             price = price + option.price;
 
           /* END IF: if option is selected and option is not default */
@@ -192,20 +197,28 @@
 
             /* deduct price of option from price */
             price = price - option.price;
+            console.log('price - :', price);
 
           /* END ELSE IF: if option is not selected and option is default */
           }
           /* add const dla wyszukanych elementów */
-          const images = thisProduct.imageWrapper.querySelectorAll(thisProduct.data.params-param.options);
+          const images = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
+
+          if(!thisProduct.params[paramId]) {
+            thisProduct.params[paramId] = {
+              label: param.label,
+              options: {},
+            };
+          }
 
           /* jesli opcja jest zaznaczona to all img dla tej opcji powinny otrzymac klase zapisaną w classNames.menuProduct.imageVisible */
           if(optionSelected){
-            for(let image in images){
+            for(let image of images){
               image.classList.add(classNames.menuProduct.imageVisible);
             }
           /* all img dla tej opcji powinny stracic klase zapisaną w classNames.menuProduct.imageVisible */
           } else {
-            for(let image in images){
+            for(let image of images){
               image.classList.remove(classNames.menuProduct.imageVisible);
             }
           }
@@ -215,10 +228,11 @@
       }
 
       /*NEW multiply price by amount */
-      price *= thisProduct.amountWidget.value;
+      thisProduct.priceSingle = price;
+      thisProduct.price = thisProduct.priceSingle * thisProduct.amountWidget.value;
 
-      /* jak to zapisac? wyrzuca bląd ? set the contents of thisProduct.priceElem to be the value of variable price */
-      thisProduct.priceElem = price;
+      /* set the contents of thisProduct.priceElem to be the value of variable price */
+      thisProduct.priceElem.innerHTML = thisProduct.price;
     }
 
     initAmountWidget(){
@@ -238,7 +252,8 @@
 
       thisWidget.getElements(element);
       thisWidget.value = settings.amountWidget.defaultValue;
-      thisWidget.setValue(thisWidget.input.value);
+      thisWidget.setValue(thisWidget.value);
+      thisWidget.initActions();
 
       console.log('AmountWidget:', thisWidget);
       console.log('constructor arguments:', element);
@@ -258,26 +273,30 @@
 
       const newValue = parseInt(value);
 
-      /* TODO: Add validation */
+      /* TODO: Add validation te trzy nizej maja byc w if jesli jest >0 i <10 to to wykonaj.*/
 
-      thisWidget.value = newValue;
-      thisWidget.announce();
-      thisWidget.input.value = thisWidget.value;
+      if(newValue != thisWidget.input.value && newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax){
+        thisWidget.value = newValue;
+        thisWidget.announce();
+        thisWidget.input.value = thisWidget.value;
+      }
     }
 
     initActions() {
+      const thisWidget = this;
+
       thisWidget.input.addEventListener('change', function(){
-        setValue(thisWidget.input.value);
+        thisWidget.setValue(thisWidget.input.value);
       });
 
       thisWidget.linkDecrease.addEventListener('click', function(){
         event.preventDefault();
-        setValue(thisWidget.value-1);
+        thisWidget.setValue(thisWidget.value-1);
       });
 
       thisWidget.linkIncrease.addEventListener('click', function(){
         event.preventDefault();
-        setValue(thisWidget.value+1);
+        thisWidget.setValue(thisWidget.value+1);
       });
     }
 
