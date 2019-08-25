@@ -188,6 +188,7 @@
       thisProduct.cartButton.addEventListener('click', function(event){
         event.preventDefault();
         thisProduct.processOrder();
+        thisProduct.addToCart();
       });
     }
 
@@ -237,15 +238,17 @@
           /* add const dla wyszukanych elementów */
           const images = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
 
-          if(!thisProduct.params[paramId]) {
-            thisProduct.params[paramId] = {
-              label: param.label,
-              options: {},
-            };
-          }
-
           /* jesli opcja jest zaznaczona to all img dla tej opcji powinny otrzymac klase zapisaną w classNames.menuProduct.imageVisible */
           if(optionSelected){
+            if(!thisProduct.params[paramId]) {
+              thisProduct.params[paramId] = {
+                label: param.label,
+                options: {},
+              };
+            }
+
+            thisProduct.params[paramId].options[optionId] = option.label;
+
             for(let image of images){
               image.classList.add(classNames.menuProduct.imageVisible);
             }
@@ -266,6 +269,8 @@
 
       /* set the contents of thisProduct.priceElem to be the value of variable price */
       thisProduct.priceElem.innerHTML = thisProduct.price;
+
+      console.log(thisProduct.params);
     }
 
     initAmountWidget(){
@@ -276,6 +281,14 @@
       thisProduct.amountWidgetElem.addEventListener('updated', function(){
         thisProduct.processOrder();
       });
+    }
+
+    addToCart(){
+      const thisProduct = this;
+
+      thisProduct.name = thisProduct.data.name;
+      thisProduct.amount = thisProduct.amountWidget.value;
+      app.cart.add(thisProduct);
     }
   }
 
@@ -360,6 +373,7 @@
 
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
+      thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
     }
 
     initActions(){
@@ -368,6 +382,24 @@
       thisCart.dom.toggleTrigger.addEventListener('click', function(){
         thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       });
+    }
+
+    add(menuProduct){
+      const thisCart = this;
+
+      console.log('adding product', menuProduct);
+
+      // generate HTML based on template
+      const generatedHTML = templates.cartProduct(thisCart);
+
+      // create element using utils.createElementFromHTML
+      generatedDOM = utils.createDOMFromHTML(generatedHTML);
+
+      // find menu container
+       const cartContainer = document.querySelector(select.containerOf.cart);
+
+      // add element to thisCart
+      cartContainer.appendChild(generatedDOM);
     }
   }
 
