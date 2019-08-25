@@ -389,17 +389,124 @@
 
       console.log('adding product', menuProduct);
 
-      // generate HTML based on template
+      // generate HTML based on template  ? this cart?
       const generatedHTML = templates.cartProduct(thisCart);
 
       // create element using utils.createElementFromHTML
-      generatedDOM = utils.createDOMFromHTML(generatedHTML);
+      const generatedDOM = utils.createDOMFromHTML(generatedHTML);
 
       // find menu container
-       const cartContainer = document.querySelector(select.containerOf.cart);
+      const cartContainer = document.querySelector(select.containerOf.cart);
 
       // add element to thisCart
       cartContainer.appendChild(generatedDOM);
+
+      //  gdzie to ma byc? 9.4."Wróć teraz do metody Cart.add i znajdź linię:
+      // thisCart.products.push(menuProduct);
+      thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
+
+      thisCart.update();
+
+    }
+  }
+
+  class CartProduct{
+    constructor(menuProduct, element){
+      const thisCartProduct = this;
+
+      thisCartProduct.id = menuProduct.id;
+      thisCartProduct.name = menuProduct.name;
+      thisCartProduct.price = menuProduct.price;
+      thisCartProduct.priceSingle = menuProduct.priceSingle;
+      thisCartProduct.amount = menuProduct.amount;
+      thisCartProduct.params = JSON.parse(JSON.stringify(menuProduct.params));
+
+      //? 2. to ma byc w CartProduct czy w CArt? w konstruktorze zapisz właściwość thisCart.deliveryFee
+      //i nadaj jej wartość zapisaną w odpowiedniej właściwości obiektu settings.
+      thisCart.deliveryFee = settings.cart.defaultDeliveryFee;
+
+      thisCartProduct.getElements(element);
+      thisCartProduct.initActions();
+      thisCartProduct.initAmountWidget();
+
+      console.log(thisCartProduct);
+      console.log('productData', menuProduct);
+    }
+
+    getElements(element){
+      const thisCartProduct = this;
+
+      thisCartProduct.dom = {};
+
+      thisCartProduct.dom.wrapper = element;
+      thisCartProduct.dom.amountWidget = thisCartProduct.element.querySelector(select.cartProduct.amountWidget);
+      thisCartProduct.dom.price = thisCartProduct.element.querySelector(select.cartProduct.price);
+      thisCartProduct.dom.edit = thisCartProduct.element.querySelector(select.cartProduct.edit);
+      thisCartProduct.dom.remove = thisCartProduct.element.querySelector(select.cartProduct.remove);
+    }
+
+    //? 1. czy initAmount.. i update ma byc w Cart czy cart Product?
+    //ilość sztuk
+    // Zacznij od znalezienia metody Product.initAmountWidget
+    // i skopiowania jej do klasy CartProduct. Następnie musisz zmienić:
+      // wszystkie wystąpienia nazwy stałej thisProduct na thisCartProduct,
+      // argument przekazywany kreatorowi przy tworzeniu nowej instancji AmountWidget (znajdź właściwy element w metodzie Cart.getElements),
+      // element, któremu dodajemy event listener,
+      // zawartość handlera eventu (na razie ją skasuj).
+
+    initAmountWidget(){
+      const thisCartProduct = this;
+
+      thisCartProduct.amountWidget = new AmountWidget(thisCart.dom.productList);
+
+      thisCart.dom.productList.addEventListener('updated', function(){
+        //??Wartością thisCartProduct.amount będzie właściwość value obiektu
+        //thisCartProduct.amountWidget, ponieważ nasz AmountWidget sam aktualizuje tę właściwość.
+        thisCartProduct.amount =
+        //??Natomiast do właściwości thisCartProduct.price przypiszemy wartość
+        //mnożenia dwóch właściwości tej instancji (thisCartProduct) –
+        //priceSingle oraz amount (której przed chwilą nadaliśmy nową wartość).
+        thisCartProduct.price = thisCartProduct.priceSingle * thisCartProduct.amount;
+
+
+        // ?? Pozostaje jeszcze wyświetlenie ceny tego produktu w koszyku.
+        // Cenę mamy już obliczoną i zapisaną we właściwości price,
+        // a element DOM zawierający cenę znaleźliśmy w metodzie getElements,
+        // więc bez problemu sobie poradzisz z zamienieniem zawartości tego elementu.
+      });
+    }
+
+    update(){
+      thisCart = this;
+
+      totalNumber = 0;
+      subtotalPrice = 0;
+
+      for (let product of thisCart.products){
+        thisCart.subtotalPrice = thisCart.subtotalPrice + thisCartProduct.price;
+        thisCart.totalNumber = thisCart.totalNumber + thisCartProduct.amount;
+      }
+
+      thisCart.totalPrice = subtotalPrice + deliveryFee;
+
+      console.log(totalNumber, subtotalPrice, thisCart.totalPrice);
+    }
+
+    remove(){
+      const thisCartProduct = this;
+
+      const event = new CustomEvent('remove', {
+        bubbles: true,
+        detail: {
+          cartProduct:thisCartProduct,
+        },
+      });
+
+      thisCartProduct.dom.wrapper.dispatchEvent(event);
+    }
+
+    initActions(){
+
     }
   }
 
@@ -429,11 +536,11 @@
 
     init: function(){
       const thisApp = this;
-      console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('classNames:', classNames);
-      console.log('settings:', settings);
-      console.log('templates:', templates);
+      // console.log('*** App starting ***');
+      // console.log('thisApp:', thisApp);
+      // console.log('classNames:', classNames);
+      // console.log('settings:', settings);
+      // console.log('templates:', templates);
 
       thisApp.initData();
       thisApp.initMenu();
