@@ -349,7 +349,9 @@
     announce(){
       const thisWidget = this;
 
-      const event = new Event('updated');
+      const event = new CustomEvent('updated', {
+        bubbles: true
+      });
       thisWidget.element.dispatchEvent(event);
     }
   }
@@ -359,6 +361,8 @@
       const thisCart = this;
 
       thisCart.products = [];
+
+      thisCart.deliveryFee = settings.cart.defaultDeliveryFee;
 
       thisCart.getElements(element);
       thisCart.initActions();
@@ -374,6 +378,12 @@
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
       thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
+
+      thisCart.renderTotalsKeys = ['totalNumber', 'totalPrice', 'subtotalPrice', 'deliveryFee'];
+
+      for(let key of thisCart.renderTotalsKeys){
+        thisCart.dom[key] = thisCart.dom.wrapper.querySelectorAll(select.cart[key]);
+      }
     }
 
     initActions(){
@@ -382,6 +392,42 @@
       thisCart.dom.toggleTrigger.addEventListener('click', function(){
         thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       });
+
+      thisCart.dom.productList.addEventListener('updated', function(){
+        thisCart.update();
+      });
+
+      thisCart.dom.productList.addEventListener('remove', function(){
+        thisCart.remove(event.detail.cartProduct);
+      });
+    }
+
+    // remove(cartProduct){
+    //   const thisCart = this;
+
+    //   const index =
+    // }
+
+    update(){
+      const thisCart = this;
+
+      const totalNumber = 0;
+      const subtotalPrice = 0;
+
+      for (let product of thisCart.products){
+        product.thisCart.subtotalPrice = thisCart.subtotalPrice + thisCart.price;
+        product.thisCart.totalNumber = thisCart.totalNumber + thisCart.amount;
+      }
+
+      thisCart.totalPrice = subtotalPrice + thisCart.deliveryFee;
+
+      console.log(totalNumber, subtotalPrice, thisCart.totalPrice);
+
+      for(let key of thisCart.renderTotalsKeys){
+        for(let elem of thisCart.dom[key]){
+          elem.innerHTML = thisCart[key];
+        }
+      }
     }
 
     add(menuProduct){
@@ -389,8 +435,8 @@
 
       console.log('adding product', menuProduct);
 
-      // generate HTML based on template  ? this cart?
-      const generatedHTML = templates.cartProduct(thisCart);
+      // generate HTML based on template
+      const generatedHTML = templates.cartProduct(menuProduct);
 
       // create element using utils.createElementFromHTML
       const generatedDOM = utils.createDOMFromHTML(generatedHTML);
@@ -421,13 +467,9 @@
       thisCartProduct.amount = menuProduct.amount;
       thisCartProduct.params = JSON.parse(JSON.stringify(menuProduct.params));
 
-      //? 2. to ma byc w CartProduct czy w CArt? w konstruktorze zapisz właściwość thisCart.deliveryFee
-      //i nadaj jej wartość zapisaną w odpowiedniej właściwości obiektu settings.
-      thisCart.deliveryFee = settings.cart.defaultDeliveryFee;
-
       thisCartProduct.getElements(element);
-      thisCartProduct.initActions();
       thisCartProduct.initAmountWidget();
+      thisCartProduct.initActions();
 
       console.log(thisCartProduct);
       console.log('productData', menuProduct);
@@ -445,51 +487,20 @@
       thisCartProduct.dom.remove = thisCartProduct.element.querySelector(select.cartProduct.remove);
     }
 
-    //? 1. czy initAmount.. i update ma byc w Cart czy cart Product?
-    //ilość sztuk
-    // Zacznij od znalezienia metody Product.initAmountWidget
-    // i skopiowania jej do klasy CartProduct. Następnie musisz zmienić:
-      // wszystkie wystąpienia nazwy stałej thisProduct na thisCartProduct,
-      // argument przekazywany kreatorowi przy tworzeniu nowej instancji AmountWidget (znajdź właściwy element w metodzie Cart.getElements),
-      // element, któremu dodajemy event listener,
-      // zawartość handlera eventu (na razie ją skasuj).
-
     initAmountWidget(){
       const thisCartProduct = this;
 
-      thisCartProduct.amountWidget = new AmountWidget(thisCart.dom.productList);
+      thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget);
 
-      thisCart.dom.productList.addEventListener('updated', function(){
-        //??Wartością thisCartProduct.amount będzie właściwość value obiektu
-        //thisCartProduct.amountWidget, ponieważ nasz AmountWidget sam aktualizuje tę właściwość.
-        thisCartProduct.amount =
-        //??Natomiast do właściwości thisCartProduct.price przypiszemy wartość
-        //mnożenia dwóch właściwości tej instancji (thisCartProduct) –
-        //priceSingle oraz amount (której przed chwilą nadaliśmy nową wartość).
+      thisCartProduct.dom.amountWidget.addEventListener('updated', function(){
+
+        thisCartProduct.amount = thisCartProduct.amountWidget.value;
+
         thisCartProduct.price = thisCartProduct.priceSingle * thisCartProduct.amount;
 
+        thisCartProduct.dom.price.innerHTML = thisCartProduct.price;
 
-        // ?? Pozostaje jeszcze wyświetlenie ceny tego produktu w koszyku.
-        // Cenę mamy już obliczoną i zapisaną we właściwości price,
-        // a element DOM zawierający cenę znaleźliśmy w metodzie getElements,
-        // więc bez problemu sobie poradzisz z zamienieniem zawartości tego elementu.
       });
-    }
-
-    update(){
-      thisCart = this;
-
-      totalNumber = 0;
-      subtotalPrice = 0;
-
-      for (let product of thisCart.products){
-        thisCart.subtotalPrice = thisCart.subtotalPrice + thisCartProduct.price;
-        thisCart.totalNumber = thisCart.totalNumber + thisCartProduct.amount;
-      }
-
-      thisCart.totalPrice = subtotalPrice + deliveryFee;
-
-      console.log(totalNumber, subtotalPrice, thisCart.totalPrice);
     }
 
     remove(){
@@ -506,6 +517,16 @@
     }
 
     initActions(){
+      const thisCartProduct = this;
+
+      thisCartProduct.dom.edit.addEventListener('click', function(){
+        event.preventDefault();
+      });
+
+      thisCartProduct.dom.remove.addEventListener('click', function(){
+        event.preventDefault();
+        thisCartProduct.remove();
+      });
 
     }
   }
