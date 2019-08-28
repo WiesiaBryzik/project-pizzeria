@@ -411,17 +411,17 @@
     update(){
       const thisCart = this;
 
-      const totalNumber = 0;
-      const subtotalPrice = 0;
+      thisCart.totalNumber = 0;
+      thisCart.subtotalPrice = 0;
 
       for (let product of thisCart.products){
-        product.thisCart.subtotalPrice = thisCart.subtotalPrice + thisCart.price;
-        product.thisCart.totalNumber = thisCart.totalNumber + thisCart.amount;
+        thisCart.subtotalPrice = thisCart.subtotalPrice + thisCart.price;
+        thisCart.totalNumber = thisCart.totalNumber + thisCart.amountWidget;
       }
 
-      thisCart.totalPrice = subtotalPrice + thisCart.deliveryFee;
+      thisCart.totalPrice = thisCart.subtotalPrice + thisCart.deliveryFee;
 
-      console.log(totalNumber, subtotalPrice, thisCart.totalPrice);
+      //console.log(totalNumber, subtotalPrice, thisCart.totalPrice);
 
       for(let key of thisCart.renderTotalsKeys){
         for(let elem of thisCart.dom[key]){
@@ -441,13 +441,10 @@
       // create element using utils.createElementFromHTML
       const generatedDOM = utils.createDOMFromHTML(generatedHTML);
 
-      // find menu container
-      const cartContainer = document.querySelector(select.containerOf.cart);
+      // add element
+      thisCart.dom.productList.appendChild(generatedDOM);
 
-      // add element to thisCart
-      cartContainer.appendChild(generatedDOM);
-
-      //  gdzie to ma byc? 9.4."Wróć teraz do metody Cart.add i znajdź linię:
+      // "Wróć teraz do metody Cart.add i znajdź linię:"
       // thisCart.products.push(menuProduct);
       thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
 
