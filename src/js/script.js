@@ -402,11 +402,15 @@
       });
     }
 
-    // remove(cartProduct){
-    //   const thisCart = this;
+    remove(cartProduct){
+      const thisCart = this;
 
-    //   const index =
-    // }
+      const index = thisCart.products.indexOf(cartProduct);
+
+      const removedValue = thisCart.products.splice(index, 1);
+
+      cartProduct.dom.wrapper.remove();
+    }
 
     update(){
       const thisCart = this;
