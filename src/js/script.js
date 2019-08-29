@@ -407,9 +407,11 @@
 
       const index = thisCart.products.indexOf(cartProduct);
 
-      const removedValue = thisCart.products.splice(index, 1);
+      thisCart.products.splice(index, 1);
 
       cartProduct.dom.wrapper.remove();
+
+      thisCart.update();
     }
 
     update(){
@@ -419,8 +421,8 @@
       thisCart.subtotalPrice = 0;
 
       for (let product of thisCart.products){
-        thisCart.subtotalPrice = thisCart.subtotalPrice + thisCart.price;
-        thisCart.totalNumber = thisCart.totalNumber + thisCart.amountWidget;
+        thisCart.subtotalPrice = thisCart.subtotalPrice + product.price;
+        thisCart.totalNumber = thisCart.totalNumber + product.amount;
       }
 
       thisCart.totalPrice = thisCart.subtotalPrice + thisCart.deliveryFee;
@@ -482,10 +484,10 @@
       thisCartProduct.dom = {};
 
       thisCartProduct.dom.wrapper = element;
-      thisCartProduct.dom.amountWidget = thisCartProduct.element.querySelector(select.cartProduct.amountWidget);
-      thisCartProduct.dom.price = thisCartProduct.element.querySelector(select.cartProduct.price);
-      thisCartProduct.dom.edit = thisCartProduct.element.querySelector(select.cartProduct.edit);
-      thisCartProduct.dom.remove = thisCartProduct.element.querySelector(select.cartProduct.remove);
+      thisCartProduct.dom.amountWidget = element.querySelector(select.cartProduct.amountWidget);
+      thisCartProduct.dom.price = element.querySelector(select.cartProduct.price);
+      thisCartProduct.dom.edit = element.querySelector(select.cartProduct.edit);
+      thisCartProduct.dom.remove = element.querySelector(select.cartProduct.remove);
     }
 
     initAmountWidget(){
