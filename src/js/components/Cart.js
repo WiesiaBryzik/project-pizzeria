@@ -1,6 +1,6 @@
-import {settings, select, templates, classNames} from './settings.js';
-import utils from './utils.js';
-import CartProduct from './components/CartProduct.js';
+import {settings, select, templates, classNames} from '../settings.js';
+import {utils} from '../utils.js';
+import CartProduct from './CartProduct.js';
 
 class Cart{
   constructor(element){
@@ -123,7 +123,7 @@ class Cart{
       totalNumber: thisCart.totalNumber,
       subtotalPrice: thisCart.subtotalPrice,
       deliveryFee: thisCart.deliveryFee,
-      // products = [product],
+      products: [],
 
       // Obiekt payload musi też zawierać tablicę products, która na razie będzie pusta.
       // Pod obiektem payload dodaj pętlę iterującą po wszystkich thisCart.products,
@@ -131,8 +131,10 @@ class Cart{
       // Wynik zwracany przez tą metodą dodaj do tablicy payload.products.
     };
 
+    console.log(thisCart.products);
+
     for(let product of thisCart.products){
-      product.getData();
+      payload.products.push(product.getData());
     }
 
     const options = {

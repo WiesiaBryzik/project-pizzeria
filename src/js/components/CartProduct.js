@@ -1,5 +1,5 @@
-import {select} from './settings.js';
-import AmountWidget from './components/AmountWidget.js';
+import {select} from '../settings.js';
+import AmountWidget from './AmountWidget.js';
 
 class CartProduct{
   constructor(menuProduct, element){
@@ -76,15 +76,17 @@ class CartProduct{
   }
 
   getData(){
-    // const thisCartProduct = this;
+    const thisCartProduct = this;
 
-    // const data = {
-    //   id: thisCartProduct.id,
-    //   amount: thisCartProduct.amount,
-    //   price: thisCartProduct.price,
-    //   priceSingle: thisCartProduct.priceSingle,
-    //   params: thisCartProduct.params,
-    //};
+    const data = {
+      id: thisCartProduct.id,
+      amount: thisCartProduct.amount,
+      price: thisCartProduct.price,
+      priceSingle: thisCartProduct.priceSingle,
+      params: thisCartProduct.params,
+    };
+
+    return data;
 
     // jak wywołać to data?
     //Pozostaje nam jeszcze napisanie metody CartProduct.getData,
