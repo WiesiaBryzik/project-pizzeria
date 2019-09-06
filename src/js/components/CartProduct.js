@@ -87,12 +87,6 @@ class CartProduct{
     };
 
     return data;
-
-    // jak wywołać to data?
-    //Pozostaje nam jeszcze napisanie metody CartProduct.getData,
-    //która będzie zwracać wszystkie informacje o zamawianym produkcie –
-    //id, amount, price, priceSingle oraz params. Wszystkie te wartości są ustawiane w konstruktorze,
-    //więc nie powinno być problemu ze zwróceniem ich ("zapakowanych" w obiekt) z metody getData
   }
 }
 
