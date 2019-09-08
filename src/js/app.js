@@ -4,12 +4,14 @@ import Cart from './components/Cart.js';
 import Booking from './components/Booking.js';
 
 const app = {
-  initBooking: function() {
+  initBooking: function () {
     const thisApp = this;
-    thisApp.reservations = document.querySelector(select.containerOf.booking);
-    // thisBooking.reservations
+    thisApp.booking = document.querySelector(select.containerOf.booking);
+
     // tworzy nową instancję klasy Booking, którą za chwilę stworzymy,
     //przekazując jej konstruktorowi znaleziony kontener widgetu,
+
+    new Booking();
   },
 
   initPages: function () {
