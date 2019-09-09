@@ -19,24 +19,35 @@ class DatePicker extends BaseWidget {
     thisWidget.maxDate = utils.addDays(thisWidget.minDate, settings.datePicker.maxDaysInFuture);
 
     //zainicjowanie pluginu ?????
-    // date.config.onChange.push(function(dateStr, flatpickr) { thisWidget.value = dateStr;
 
-    //   flatpickr(thisWidget.dom.input, {
-    //     defaultDate: thisWidget.minDate,
-    //     minDate: thisWidget.minDate,
-    //     maxDate: thisWidget.maxDate,
-    //     'locale': {
-    //       'firstDayOfWeek': 1
-    //     },
-    //     'disable': [function (date) {
-    //       return (date.getDay() === 1);
-    //     }],
 
+    // flatpickr(thisWidget.dom.input, {
+    //   defaultDate: thisWidget.minDate,
+    //   minDate: thisWidget.minDate,
+    //   maxDate: thisWidget.maxDate,
+    //   'locale': {
+    //     'firstDayOfWeek': 1
+    //   },
+    //   'disable': [function (date) {
+    //     return (date.getDay() === 1);
+    //   }],
+    //   date.config.onChange.push(function (dateStr, flatpickr) {
+    //     thisWidget.value = dateStr;
     //   });
-    //   //w momencie wykrycia zmiany wartości przez plugin,
-    //   //chcemy ustawiać wartość właściwości thisWidget.value
-    //   //na dateStr widoczne w dokumentacji pluginu.
-    // } );
+
+
+    //w momencie wykrycia zmiany wartości przez plugin,
+    //chcemy ustawiać wartość właściwości thisWidget.value
+    //na dateStr widoczne w dokumentacji pluginu.
+
+    // https://flatpickr.js.org/events/
+    // Example: instance.config.onChange.push(function() { } );
+    // {
+    //   onChange: function(selectedDates, dateStr, instance) {
+    //       //...
+    //   },
+
+    // });
   }
 
   parseValue(value) {
