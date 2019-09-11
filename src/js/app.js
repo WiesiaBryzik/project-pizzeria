@@ -6,12 +6,14 @@ import Booking from './components/Booking.js';
 const app = {
   initBooking: function () {
     const thisApp = this;
+
+    //znajduje kontener widgetu do rezerwacji stron, którego selektor mamy zapisany w select.containOf.booking
     thisApp.booking = document.querySelector(select.containerOf.booking);
 
     // tworzy nową instancję klasy Booking, którą za chwilę stworzymy,
     //przekazując jej konstruktorowi znaleziony kontener widgetu,
 
-    new Booking();
+    new Booking(thisApp.booking);
   },
 
   initPages: function () {

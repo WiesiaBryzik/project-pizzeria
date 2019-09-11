@@ -33,7 +33,7 @@ class HourPicker extends BaseWidget {
     //czyli np. 12 na '12:00', a 12.5 na '12:30'.
     const numberToHour = utils.numberToHour(value);
 
-    return numberToHour(value);
+    return numberToHour;
   }
 
   isValid(value) {
@@ -42,7 +42,9 @@ class HourPicker extends BaseWidget {
   }
 
   renderValue() {
-    // ?? Metoda renderValue ma zamieniać zawartość elementu thisWidget.dom.output na wartość widgetu.
+    const thisWidget = this;
+    // Metoda renderValue ma zamieniać zawartość elementu thisWidget.dom.output na wartość widgetu.
+    thisWidget.dom.output = thisWidget.value;
   }
 
 }
