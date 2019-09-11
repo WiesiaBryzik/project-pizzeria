@@ -31,6 +31,8 @@
         ]
     },
     "globals": {
-      "Handlebars": "readonly"
+      "Handlebars": "readonly",
+      "flatpickr": "readonly",
+      "rangeSlider": "readonly"
     }
 }

@@ -10,18 +10,22 @@ class Booking {
     const thisBooking = this;
     // DONE konstruktor ma wywoływać metodę render, przekazując jej argument,
     //który otrzymuje z app.initBooking,
+
     thisBooking.render(wrapper);
+    // thisBooking.getElements();
     thisBooking.initWidgets();
     thisBooking.getData();
-
     console.log('wrapper', wrapper);
   }
 
+  // getElements(wrapper){
+  //   const thisBooking = this;
+
+  //   thisBooking.dom.form = thisBooking.dom.wrapper.querySelector(".order-confirmation");
+  // }
+
   getData() {
     const thisBooking = this;
-
-    // MOJE 3
-    // thisBooking.dom.form = thisBooking.dom.wrapper.querySelector(jaki tu selektor???);
 
     const startDateParam = settings.db.dateStartParamKey + '=' + utils.dateToStr(thisBooking.datePicker.minDate);
     const endDateParam = settings.db.dateEndParamKey + '=' + utils.dateToStr(thisBooking.datePicker.maxDate);
@@ -161,7 +165,7 @@ class Booking {
         // Na pewno chcemy wprowadzić możliwość zaznaczenia dostępnego stolika za pomocą kliknięcia.
         // Jeśli potem użytkownik zmieni datę lub godzinę, zaznaczenie powinno być usuwane.
         table.addEventListener('click', function(){
-          table.classList.add(classNames.booking.loading);
+          table.classList.add('active');
         });
       }
     }
@@ -196,6 +200,8 @@ class Booking {
     thisBooking.dom.hourPicker = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
 
     thisBooking.dom.tables = thisBooking.dom.wrapper.querySelectorAll(select.booking.tables);
+    thisBooking.dom.form = thisBooking.dom.wrapper.querySelector('.order-confirmation');
+
   }
 
   initWidgets() {
@@ -214,10 +220,6 @@ class Booking {
 
     thisBooking.dom.wrapper.addEventListener('updated', function(){
       thisBooking.updateDOM();
-
-      // ?? MOJE
-      // Jeśli potem użytkownik zmieni datę lub godzinę, zaznaczenie powinno być usuwane.
-      table.classList.remove(classNames.booking.loading);
     });
 
     // MOJE 2
@@ -228,9 +230,9 @@ class Booking {
       thisBooking.sendReservation();
 
       // MOJE uniemożliwienie rezerwacji tego samego stolika
-      if (thisBooking.sendReservation()){
-        table.classList.add(classNames.booking.tableBooked);
-      }
+      // if (thisBooking.sendReservation()){
+      //   table.classList.add(classNames.booking.tableBooked);
+      // }
     });
   }
 
@@ -246,7 +248,7 @@ class Booking {
       time: thisBooking.hourPicker,
       hoursAmount: thisBooking.hoursAmount,
       peopleAmount: thisBooking.peopleAmount,
-      table: tableId,
+      // table: tableId,
     };
 
     const options = {

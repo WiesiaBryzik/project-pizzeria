@@ -18,9 +18,6 @@ class DatePicker extends BaseWidget {
     thisWidget.minDate = new Date(thisWidget.value);
     thisWidget.maxDate = utils.addDays(thisWidget.minDate, settings.datePicker.maxDaysInFuture);
 
-    //zainicjowanie pluginu ?????
-
-
     flatpickr(thisWidget.dom.input, {
       defaultDate: thisWidget.minDate,
       minDate: thisWidget.minDate,
@@ -31,26 +28,11 @@ class DatePicker extends BaseWidget {
       'disable': [function (date) {
         return (date.getDay() === 1);
       }],
-      onChange: function(){
+      onChange: function(dateToStr){
+        console.log(dateToStr);
         thisWidget.value = dateToStr;
       }
-      // date.config.onChange.push(function (dateStr, flatpickr) {
-      //   thisWidget.value = dateStr;
     });
-
-
-    //w momencie wykrycia zmiany wartości przez plugin,
-    //chcemy ustawiać wartość właściwości thisWidget.value
-    //na dateStr widoczne w dokumentacji pluginu.
-
-    // https://flatpickr.js.org/events/
-    // Example: instance.config.onChange.push(function() { } );
-    // {
-    //   onChange: function(selectedDates, dateStr, instance) {
-    //       //...
-    //   },
-
-    // });
   }
 
   parseValue(value) {
@@ -61,14 +43,7 @@ class DatePicker extends BaseWidget {
     return isNaN(value);
   }
 
-  // metoda renderValue również nie będzie nam potrzebna –
-  //możesz ją stworzyć z pustą wartością, tylko po to,
-  //aby nadpisać domyślną metodę w BaseWidget (alternatywnie,
-  //możesz w metodzie BaseWidget.renderValue zakomentować console.log).
-
-  renderValue() {
-
-  }
+  renderValue() {}
 }
 
 export default DatePicker;
