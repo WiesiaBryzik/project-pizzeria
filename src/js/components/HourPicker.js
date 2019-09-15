@@ -24,11 +24,10 @@ class HourPicker extends BaseWidget {
     thisWidget.dom.input.addEventListener('input', function(){
       thisWidget.value = thisWidget.dom.input.value; //powtórzone w konstruktorze
     });
-
   }
 
   parseValue(value) {
-    // ?? Metoda parseValue ma przekazywać otrzymaną wartość do funkcji utils.numberToHour
+    // Metoda parseValue ma przekazywać otrzymaną wartość do funkcji utils.numberToHour
     // i zwracać wartość otrzymaną z tej funkcji. Ta funkcja zamienia liczby na zapis godzinowy,
     //czyli np. 12 na '12:00', a 12.5 na '12:30'.
     return utils.numberToHour(value);
@@ -44,7 +43,6 @@ class HourPicker extends BaseWidget {
     // Metoda renderValue ma zamieniać zawartość elementu thisWidget.dom.output na wartość widgetu.
     thisWidget.dom.output = thisWidget.value;
   }
-
 }
 
 export default HourPicker;

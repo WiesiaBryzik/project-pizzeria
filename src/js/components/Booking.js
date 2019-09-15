@@ -1,5 +1,5 @@
-import {select, templates, settings, classNames} from '../settings.js';
-import {utils} from '../utils.js';
+import { templates, select, settings, classNames } from '../settings.js';
+import { utils } from '../utils.js';
 import AmountWidget from './AmountWidget.js';
 import DatePicker from './DatePicker.js';
 import HourPicker from './HourPicker.js';
@@ -12,17 +12,9 @@ class Booking {
     //który otrzymuje z app.initBooking,
 
     thisBooking.render(wrapper);
-    // thisBooking.getElements();
     thisBooking.initWidgets();
     thisBooking.getData();
-    console.log('wrapper', wrapper);
   }
-
-  // getElements(wrapper){
-  //   const thisBooking = this;
-
-  //   thisBooking.dom.form = thisBooking.dom.wrapper.querySelector(".order-confirmation");
-  // }
 
   getData() {
     const thisBooking = this;
@@ -88,11 +80,11 @@ class Booking {
     thisBooking.booked = {};
 
     for (let item of eventsCurrent) {
-      thisBooking.makeBooked(item.date, item.hour, item.duratiom, item.table);
+      thisBooking.makeBooked(item.date, item.hour, item.duration, item.table);
     }
 
     for (let item of bookings) {
-      thisBooking.makeBooked(item.date, item.hour, item.duratiom, item.table);
+      thisBooking.makeBooked(item.date, item.hour, item.duration, item.table);
     }
 
     const minDate = thisBooking.datePicker.minDate;
@@ -100,8 +92,8 @@ class Booking {
 
     for (let item of eventsRepeat) {
       if (item.repeat == 'daily') {
-        for(let loopDate = minDate; loopDate <= maxDate; loopDate = utils.addDays(loopDate, 1)){
-          thisBooking.makeBooked(utils.dateToStr(loopDate), item.hour, item.duratiom, item.table);
+        for (let loopDate = minDate; loopDate <= maxDate; loopDate = utils.addDays(loopDate, 1)) {
+          thisBooking.makeBooked(utils.dateToStr(loopDate), item.hour, item.duration, item.table);
         }
       }
     }
@@ -113,63 +105,103 @@ class Booking {
   makeBooked(date, hour, duration, table) {
     const thisBooking = this;
 
-    if (typeof thisBooking.booked[date] == 'undefined') {
+    if (!thisBooking.booked[date]) {
       thisBooking.booked[date] = {};
     }
 
-    const startHour = utils.hourToNumber(hour);
+    hour = hour + '';
+    let time = hour.split(':');
+    if (time[1] === '30') hour = `${time[0]}.5`;
+    else hour = time[0];
 
-    for (let hourBlock = startHour; hourBlock < startHour + duration; hourBlock += 0.5) {
-      console.log('loop', hourBlock);
-
-      if (typeof thisBooking.booked[date][hourBlock] == 'undefined') {
-        thisBooking.booked[date][hourBlock] = [];
-      }
-
-      thisBooking.booked[date][hourBlock].push(table);
+    if (!thisBooking.booked[date][hour]) {
+      thisBooking.booked[date][hour] = [];
     }
+
+    thisBooking.booked[date][hour].push(table);
+
+    hour = hour - (-duration);
+
+    if (!thisBooking.booked[date][hour]) {
+      thisBooking.booked[date][hour] = [];
+    }
+
+    thisBooking.booked[date][hour].push(table);
+
+    console.log('BOOKED', thisBooking.booked);
+
   }
 
-  updateDOM(){
+  // makeBooked(date, hour, duration, table) {
+  //   const thisBooking = this;
+
+  //   if (typeof thisBooking.booked[date] == 'undefined') {
+  //     thisBooking.booked[date] = {};
+  //   }
+
+  //   const startHour = utils.hourToNumber(hour);
+
+  //   for (let hourBlock = startHour; hourBlock < startHour + duration; hourBlock += 0.5) {
+  //     console.log('loop', hourBlock);
+
+  //     if (typeof thisBooking.booked[date][hourBlock] == 'undefined') {
+  //       thisBooking.booked[date][hourBlock] = [];
+  //     }
+
+  //     thisBooking.booked[date][hourBlock].push(table);
+  //   }
+  // }
+
+
+
+  updateDOM() {
     const thisBooking = this;
 
     thisBooking.date = thisBooking.datePicker.value;
     thisBooking.hour = utils.hourToNumber(thisBooking.hourPicker.value);
-
-    let allAvailable = false;
-
-    if(
-      typeof thisBooking.booked[thisBooking.date] == 'undefined'
-      ||
-      typeof thisBooking.booked[thisBooking.date][thisBooking.hour] == 'undefined'
-    ){
-      allAvailable = true;
-    }
-
-    for(let table of thisBooking.dom.tables){
-      let tableId = table.getAttribute(settings.booking.tableIdAttribute);
-      if(!isNaN(tableId)){
-        tableId = parseInt(tableId);
-      }
-
-      if(
-        !allAvailable // czy którys stolik jest zajęty
-        && // jesli tak to
-        thisBooking.booked[thisBooking.date][thisBooking.hour].includes(tableId) // czy tego dnia o tej godz zajety jest stolik o tym id
-      ){
+    for (let table of thisBooking.dom.tables) {
+      const tableNumber = parseInt(table.getAttribute(settings.booking.tableIdAttribute));
+      if (thisBooking.booked[thisBooking.date] && thisBooking.booked[thisBooking.date][thisBooking.hour] && thisBooking.booked[thisBooking.date][thisBooking.hour].includes(tableNumber)) {
         table.classList.add(classNames.booking.tableBooked);
       } else {
         table.classList.remove(classNames.booking.tableBooked);
-
-        //MOJE
-        // Na pewno chcemy wprowadzić możliwość zaznaczenia dostępnego stolika za pomocą kliknięcia.
-        // Jeśli potem użytkownik zmieni datę lub godzinę, zaznaczenie powinno być usuwane.
-        table.addEventListener('click', function(){
-          table.classList.add('active');
-        });
       }
     }
   }
+
+  // updateDOM(){
+  //   const thisBooking = this;
+
+  //   thisBooking.date = thisBooking.datePicker.value;
+  //   thisBooking.hour = utils.hourToNumber(thisBooking.hourPicker.value);
+
+  //   let allAvailable = false;
+
+  //   if(
+  //     typeof thisBooking.booked[thisBooking.date] == 'undefined'
+  //     ||
+  //     typeof thisBooking.booked[thisBooking.date][thisBooking.hour] == 'undefined'
+  //   ){
+  //     allAvailable = true;
+  //   }
+
+  //   for(let table of thisBooking.dom.tables){
+  //     let tableId = table.getAttribute(settings.booking.tableIdAttribute);
+  //     if(!isNaN(tableId)){
+  //       tableId = parseInt(tableId);
+  //     }
+
+  //     if(
+  //       !allAvailable // czy którys stolik jest zajęty
+  //       && // jesli tak to
+  //       thisBooking.booked[thisBooking.date][thisBooking.hour].includes(tableId) // czy tego dnia o tej godz zajety jest stolik o tym id
+  //     ){
+  //       table.classList.add(classNames.booking.tableBooked);
+  //     } else {
+  //       table.classList.remove(classNames.booking.tableBooked);
+  //     }
+  //   }
+  // }
 
   render(wrapper) {
     const thisBooking = this;
@@ -200,8 +232,6 @@ class Booking {
     thisBooking.dom.hourPicker = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
 
     thisBooking.dom.tables = thisBooking.dom.wrapper.querySelectorAll(select.booking.tables);
-    thisBooking.dom.form = thisBooking.dom.wrapper.querySelector('.order-confirmation');
-
   }
 
   initWidgets() {
@@ -218,51 +248,85 @@ class Booking {
     thisBooking.datePicker = new DatePicker(thisBooking.dom.datePicker);
     thisBooking.hourPicker = new HourPicker(thisBooking.dom.hourPicker);
 
-    thisBooking.dom.wrapper.addEventListener('updated', function(){
+    thisBooking.table = '';
+    thisBooking.dom.form = thisBooking.dom.wrapper.querySelector('.booking-form');
+
+    thisBooking.dom.wrapper.addEventListener('updated', function () {
       thisBooking.updateDOM();
     });
 
+    //MOJE
+    // Na pewno chcemy wprowadzić możliwość zaznaczenia dostępnego stolika za pomocą kliknięcia.
+    // Jeśli potem użytkownik zmieni datę lub godzinę, zaznaczenie powinno być usuwane.
+    // table.addEventListener('click', function(){
+    //   table.classList.add('active');
+    // });
+
+    // zaznaczanie stolików
+    for (let table of thisBooking.dom.tables) {
+      table.addEventListener('click', function () {
+        if (thisBooking.table) {
+          document.querySelector('[data-table="' + thisBooking.table +
+            '"]').classList.remove(classNames.booking.tableBooked);
+        }
+        let id = table.getAttribute('data-table');
+        table.classList.add(classNames.booking.tableBooked);
+        thisBooking.table = id;
+      });
+    }
+
+    // MOJE uniemożliwienie rezerwacji tego samego stolika
+    // if (thisBooking.sendReservation()){
+    // table.classList.add(classNames.booking.tableBooked);
+    // }
+
     // MOJE 2
     // Wywołanie sendReservation???
-    thisBooking.dom.form.addEventListener('submit', function(){
+    thisBooking.dom.form.addEventListener('submit', function (event) {
       event.preventDefault();
-
       thisBooking.sendReservation();
-
-      // MOJE uniemożliwienie rezerwacji tego samego stolika
-      // if (thisBooking.sendReservation()){
-      //   table.classList.add(classNames.booking.tableBooked);
-      // }
     });
   }
 
   // ?? MOJE 1
   // przekazywanie do API rezerwacji stolika?
-  sendReservation(){
+  sendReservation() {
     const thisBooking = this;
     const url = settings.db.url + '/' + settings.db.booking;
-    const payload = {
+    thisBooking.starters = thisBooking.dom.wrapper.querySelectorAll('input[name="starter"]');
+
+    const bookinfo = {
       address: 'ul. Warszawska, Warszawa',
       phone: '987654321',
-      date: thisBooking.datePicker,
-      time: thisBooking.hourPicker,
-      hoursAmount: thisBooking.hoursAmount,
-      peopleAmount: thisBooking.peopleAmount,
-      // table: tableId,
+      date: thisBooking.date,
+      hour: thisBooking.hour,
+      table: thisBooking.table,
+      repeat: false,
+      duration: thisBooking.hoursAmount,
+      ppl: thisBooking.peopleAmount,
+      starters: []
     };
+
+    for (let starter of thisBooking.starters) {
+      let name = '';
+      if (starter.checked) {
+        name = starter.value;
+      }
+      bookinfo.starters.push(name);
+    }
 
     const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(bookinfo),
     };
 
     fetch(url, options)
-      .then(function(response){
+      .then(function (response) {
         return response.json();
-      }).then(function(parsedResponse){
+      }).then(function (parsedResponse) {
         console.log('parsedResponse', parsedResponse);
       });
   }
