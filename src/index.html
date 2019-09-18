@@ -1,19 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Pizzeria</title>
-  <link href="https://fonts.googleapis.com/css?family=Lato:400,300i,700%7COswald:300,500,700&amp;subset=latin-ext" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,300i,700%7COswald:300,500,700&amp;subset=latin-ext"
+    rel="stylesheet">
   <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
+  <link href="https://npmcdn.com/flickity@2/dist/flickity.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="vendor/range-slider.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
   <header class="header">
+    <div class="container">
+      <div class="header__wrapper">
+        <div class="logo">
+          <h1 class="logo__title"><span>Mamma</span>Mia!</h1>
+          <h2 class="logo__subtitle">the best homemade Italian food</h2>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div id="pages">
+    <section class="section-main">
+      <div class="container flexible">
+        <div class="flexible-item">
+          <img src="images/main/pizza-1.jpg">
+          <div class="description">
+            <a href="#order" class="main-description">Order online</a>
+            <a class="button" class="hidden" href="#order">Delicious food delivered to your door</a>
+          </div>
+        </div>
+        <div class="flexible-item">
+          <img src="images/main/pizza-2.jpg">
+          <div class="description">
+            <a href="#booking" class="main-description">Booking</a>
+          </div>
+        </div>
+      </div>
+      <div class="container box">
+        <h2 class="logo__title">Opening hours:</h2>
+        <p class="h3">tue-sun, 12pm - 12am</p>
+      </div>
+    </section>
+
+    <section class="section-main">
+      <div class="container">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+          <!-- Indicators -->
+          <ol class="carousel-indicators down">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+          </ol>
+
+          <!-- Wrapper for slides -->
+          <div class="carousel-inner" role="listbox">
+
+            <div class="item container active">
+              <article class="opinion-">
+                <div class="opinion-image">
+                  <img src="images/main/pizza-3.jpg">
+                </div>
+                <blockquote class="opinion-description">
+                  <h2 class="h2">Amazing service!</h2>
+                  <q>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Donec elementum, justo molestie tincidunt semper, orci sapien
+                    porta ipsum, ac porttitor magna lacus vel ex. Pellentesque
+                    ullamcorper tempor quam id tempor. Praesent facilisis rhoncus
+                    lacus non aliquam. </q>
+                  <footer> Margaret Osborne</footer>
+                </blockquote>
+              </article>
+            </div>
+            <div class="item container">
+              <article class="opinion-">
+                <div class="opinion-image">
+                  <img src="images/main/pizza-5.jpg">
+                </div>
+                <blockquote class="opinion-description">
+                  <h2 class="h2">Amazing service!</h2>
+                  <q>Zupełnie inny tekst, consectetur adipiscing elit.
+                    Donec elementum, justo molestie tincidunt semper, orci sapien
+                    porta ipsum, ac porttitor magna lacus vel ex. Pellentesque
+                    ullamcorper tempor quam id tempor. Praesent facilisis rhoncus
+                    lacus non aliquam. </q>
+                  <footer> Merry Black</footer>
+                </blockquote>
+              </article>
+            </div>
+            <div class="item container">
+              <article class="opinion-">
+                <div class="opinion-image">
+                  <img src="images/main/pizza-4.jpg">
+                </div>
+                <blockquote class="opinion-description">
+                  <h2 class="h2">Amazing service!</h2>
+                  <q>Całkiem inny tekst tak dla niepoznaki, consectetur adipiscing elit.
+                    Donec elementum, justo molestie tincidunt semper, orci sapien
+                    porta ipsum, ac porttitor magna lacus vel ex. Pellentesque
+                    ullamcorper tempor quam id tempor. Praesent facilisis rhoncus
+                    lacus non aliquam. </q>
+                  <footer> Olive Kate White</footer>
+                </blockquote>
+              </article>
+            </div>
+          </div>
+
+          <!-- <div class="container">
+            <article class="opinion-">
+              <div class="opinion-image">
+                <img src="images/main/pizza-3.jpg">
+              </div>
+              <blockquote class="opinion-description">
+                <h2 class="h2">Amazing service!</h2>
+                <q>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Donec elementum, justo molestie tincidunt semper, orci sapien
+                  porta ipsum, ac porttitor magna lacus vel ex. Pellentesque
+                  ullamcorper tempor quam id tempor. Praesent facilisis rhoncus
+                  lacus non aliquam. </q>
+                <footer> Margaret Osborne</footer>
+              </blockquote>
+            </article>
+          </div> -->
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section-main gallery">
+      <div class="container gallery-inner">
+        <div class="gallery-item">
+          <img src="images/main/pizza-4.jpg">
+          <div class="description">
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-heart i-main"></i></a>
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-share-alt i-light"></i></a>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="images/main/pizza-5.jpg">
+          <div class="description">
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-heart i-main"></i></a>
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-share-alt i-light"></i></a>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="images/main/pizza-6.jpg">
+          <div class="description">
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-heart i-main"></i></a>
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-share-alt i-light"></i></a>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="images/main/pizza-7.jpg">
+          <div class="description">
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-heart i-main"></i></a>
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-share-alt i-light"></i></a>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="images/main/pizza-8.jpg">
+          <div class="description">
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-heart i-main"></i></a>
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-share-alt i-light"></i></a>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="images/main/pizza-9.jpg">
+          <div class="description">
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-heart i-main"></i></a>
+            <a class="button" href="https://www.google.pl/"><i class="fas fa-share-alt i-light"></i></a>
+          </div>
+        </div>
+        <a href="https://www.google.pl/"> Viev more on Instagram </a>
+      </div>
+    </section>
+  </div>
+
+
+
+  <!-- <header class="header">
     <div class="container">
       <div class="header__wrapper">
         <div class="logo">
@@ -68,7 +243,7 @@
     <section id="booking">
       <div class="booking-wrapper container"></div>
     </section>
-  </div>
+  </div> -->
 
   <script id="template-booking-widget" type="text/x-handlebars-template">
     <div class="booking-widget">
@@ -246,6 +421,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="vendor/range-slider.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   <script src="js/app.js" type="module"></script>
 </body>
+
 </html>

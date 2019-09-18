@@ -42,7 +42,7 @@ class HourPicker extends BaseWidget {
     return utils.numberToHour(newValue);
   }
 
-  isValid(value) {
+  isValid() {
     // Metoda isValid może zawsze zwracać prawdę true.
     return true;
   }
