@@ -1,5 +1,5 @@
 .section-main {
-  padding: 0;
+  padding: 1px;
   margin: 0 auto;
   background-color: $color-light;
   height: 100%;
@@ -15,60 +15,51 @@
 
   .flexible-item {
     position: relative;
-    // float: left;
-    width: 50%;
-    text-align: center;
-    padding: 0;
+    overflow: hidden;
+
+    .hidden-text {
+      position: absolute;
+      font-size: 15px;
+      top: 110%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: $color-light;
+      white-space: nowrap;
+    }
+
+    .main-description {
+      position: absolute;
+      font-size: 35px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: $color-light;
+    }
 
     img {
       width: 475px;
       height: 200px;
       object-fit: cover;
-      display: block;
-      margin: 0;
       padding: 5px;
     }
   }
 }
 
-.flexible-item::before{
-  position: absolute;
-  display: none;
-  content: '';
-  width: 95%;
-  height: 95%;
-  top: 50%;
-  left: 49%;
-  transform: translate(-50%, -50%);
-  background-color: #000000;
-  opacity: 0.4;
-}
-
-.flexible-item .description a {
-  position: absolute;
-  display: none;
-  top: 50%;
-  left: 35%;
-  transform: translateY(-50%);
-  font-size: 15px;
-  padding: 7px;
-  text-decoration: none;
-
-  .hidden {
-    top: 50%;
+.main-link:hover {
+  .hidden-text {
+    top: 60%;
+    transition: all 1s;
   }
 
   .main-description {
-    font-size: 35px;
-    top: 10%;
+    top: 40%;
+    transition: all 1s;
   }
 }
 
-
-.flexible-item:hover:before, .flexible-item:hover .description, .flexible-item:hover a {
-  display: flex;
+.hidden-text:hover {
+  top: 50%;
 }
-
 
 .box {
   background: $color-main;
@@ -105,11 +96,17 @@
 }
 
 /* Indicators*/
+ol.down {
+  margin: -70px -280px;
+}
 
-.down {
-  background-color: $color-main;
+.down li {
+  background-color: grey;
   bottom: -50px;
-  color: black;
+}
+
+.down li.active {
+  background-color: black;
 }
 
 /*Gallery*/
