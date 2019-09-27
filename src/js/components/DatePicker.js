@@ -28,8 +28,8 @@ class DatePicker extends BaseWidget {
       'disable': [function (date) {
         return (date.getDay() === 1);
       }],
-      onChange: function(dateToStr){
-        console.log(dateToStr);
+
+      onChange: function(selectedDate, dateToStr){
         thisWidget.value = dateToStr;
       }
     });
