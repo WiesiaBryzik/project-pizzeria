@@ -74,6 +74,34 @@ class Booking {
       });
   }
 
+  initTableAvailability() {
+    const thisBooking = this;
+    console.log(thisBooking.booked);
+
+    const tableAvailability = [];
+    for (let i = this.open; i < this.close; i += 0.5) {
+      if (thisBooking.booked[thisBooking.date][i]) {
+        thisBooking.booked[thisBooking.date][i].push[thisBooking.table];
+      } else {
+        thisBooking.booked[thisBooking.date][i] = [];
+      }
+      tableAvailability.push(thisBooking.booked[thisBooking.date][i].length);
+    }
+
+    for (let i = 0; i < tableAvailability.length; i++) {
+      const divRangeSlider = document.createElement('div');
+      divRangeSlider.classList.add('availability-div');
+      if (tableAvailability[i] === 1 || tableAvailability[i] === 2) {
+        divRangeSlider.classList.add('medium');
+      } else if (tableAvailability[i] === 3) {
+        divRangeSlider.classList.add('full');
+      } else {
+        divRangeSlider.classList.add('empty');
+      }
+      this.dom.availabilityRangeSlider.appendChild(divRangeSlider);
+    }
+  }
+
   parseData(bookings, eventsCurrent, eventsRepeat) {
     const thisBooking = this;
 
@@ -100,6 +128,7 @@ class Booking {
     console.log('thisBooking.booked', thisBooking.booked);
 
     thisBooking.updateDOM();
+    this.initTableAvailability();
   }
 
   makeBooked(date, hour, duration, table) {
